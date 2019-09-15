@@ -6,12 +6,14 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import androidx.core.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
+import androidx.core.view.ViewCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.List;
 import me.imid.swipebacklayout.lib.app.SwipeBackListenerActivityAdapter;
 
 public class SwipeBackLayout extends FrameLayout {
+    private static final String TAG = "SwipeBackLayout";
     /**
      * Minimum velocity that will be detected as a fling
      */
@@ -381,7 +384,13 @@ public class SwipeBackLayout extends FrameLayout {
         if (!mEnable) {
             return false;
         }
-        mDragHelper.processTouchEvent(event);
+        try {
+            mDragHelper.processTouchEvent(event);
+        } catch (IllegalArgumentException e) {
+            // IllegalArgumentException: pointerIndex out of range
+            Log.e(TAG, "onTouchEvent: ", e);
+            return false;
+        }
         return true;
     }
 
